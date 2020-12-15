@@ -4,10 +4,10 @@
 # ---------------------------------------------------------------
 
 # Site
-title: NexT
-subtitle:
-description: 七个芋头的学习博客
-author: John Doe
+title: 骑着大鱼追月亮学习笔记
+subtitle: 
+description: 
+author: 骑着大鱼追月亮
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: zh-Hans
 date_format: '%Y-%m-%d'
