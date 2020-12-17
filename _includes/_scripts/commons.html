@@ -3,3 +3,6 @@
 {% for common in js_commons %}
   <script type="text/javascript" src="{{ site.js | relative_url }}/{{ common }}?v={{ site.version }}"></script>
 {% endfor %}
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
