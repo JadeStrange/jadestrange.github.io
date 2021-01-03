@@ -193,7 +193,7 @@ font:
   # Fallback to `global` font settings.
   # The `size` option use `px` as unit
   logo:
-    external: false
+    external: true
     family:
     size:
 
@@ -234,7 +234,7 @@ social_icons:
 
 # Sidebar Avatar
 # in directory: /assets/images/avatar.gif
-avatar: /assets/images/shuita.jpg
+#avatar: /assets/images/shuita.jpg
 
 
 # Table Of Contents in the Sidebar
