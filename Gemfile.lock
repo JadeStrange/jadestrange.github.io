@@ -142,11 +142,6 @@ GEM
       jekyll (~> 3.3)
     jekyll-sitemap (1.2.0)
       jekyll (~> 3.3)
-    jekyll-spaceship (0.9.7)
-      gemoji (~> 3.0)
-      jekyll (>= 3.6, < 5.0)
-      nokogiri (~> 1.6)
-      rainbow (~> 3.0)
     jekyll-swiss (0.4.0)
     jekyll-theme-architect (0.1.1)
       jekyll (~> 3.5)
@@ -217,7 +212,6 @@ GEM
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (2.0.5)
-    rainbow (3.0.0)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -249,7 +243,6 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages
-  jekyll-spaceship
 
 BUNDLED WITH
    1.17.1
