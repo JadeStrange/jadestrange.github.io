@@ -193,7 +193,7 @@ font:
   # Fallback to `global` font settings.
   # The `size` option use `px` as unit
   logo:
-    external: true
+    external: false
     family:
     size:
 
