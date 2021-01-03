@@ -59,9 +59,11 @@ tags:
 ​当$x_k距离\hat\mu_i最近时$$\hat P(\omega_i\|x_k,\hat\theta) \approx1$，否则为0
 
 基于上述假设，对于c个高斯分布的均值，我们有：
+{% raw %}
 $$
 \hat \mu_i=\frac{\sum_{k=1}^{n}P(\omega_i|x_k,\hat\mu)x_k}{\sum_{k=1}^nP(\omega_i|x_k,\hat\mu)} = \frac{1}{n}\sum_{x_k \in \omega_i}x_k \ \ \ i=1,2,...,c
 $$
+{% endraw %}
 
 
 但是，样本$x_k$最终得到$c$个高斯分布的均值之后，以这些均值作为c个类中心，计算每个样本点到类中心的欧氏距离，将样本点归入到距离最近的类，从而完成K_均值聚类工作。
