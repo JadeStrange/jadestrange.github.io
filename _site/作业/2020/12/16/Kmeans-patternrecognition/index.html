@@ -1,0 +1,1078 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="聚类," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="骑着大鱼追月亮学习笔记" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="K-means Python3实现,adaboost,谱聚类思想,K-means混合高斯解释">
+<meta name="keywords" content="聚类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="K-means Python3实现">
+<meta property="og:url" content="http://localhost:4000/%E4%BD%9C%E4%B8%9A/2020/12/16/Kmeans-patternrecognition/">
+<meta property="og:site_name" content="骑着大鱼追月亮学习笔记">
+<meta property="og:description" content="K-means Python3实现,adaboost,谱聚类思想,K-means混合高斯解释">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="D:\\Desktop\\模式识别第五次作业\\Kmeans_results_1.png">
+<meta property="og:image" content="D:\\Desktop\\模式识别第五次作业\\Kmeans_results_2.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="K-means Python3实现">
+<meta name="twitter:description" content="K-means Python3实现,adaboost,谱聚类思想,K-means混合高斯解释">
+<meta name="twitter:image" content="D:\\Desktop\\模式识别第五次作业\\Kmeans_results_1.png">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '七个芋头'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>K-means Python3实现 | 骑着大鱼追月亮学习笔记</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7dfbf3528621623fb65aee5e1a39f76b";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+      <div class="site-meta-headline">
+        <a>
+          <img class="custom-logo-image" src="/assets/images/shuita.jpg"
+               alt="骑着大鱼追月亮学习笔记"/>
+        </a>
+      </div>
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">骑着大鱼追月亮学习笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+    },
+    displayAlign : "left",
+    TeX: {
+        equationNumbers: {
+            autoNumber: "all",
+            useLabelIds: true
+        }
+    },
+    "HTML-CSS": {
+        linebreaks: {
+            automatic: true
+        },
+        scale: 100,
+        styles: {
+            ".MathJax_Display": {
+                "text-align": "left",
+                "width" : "auto",
+                "margin": "10px 0px 10px 0px !important",
+                "background-color": "#f5f5f5 !important",
+                "border-radius": "3px !important",
+                border:  "1px solid #ccc !important",
+                padding: "5px 5px 5px 5px !important"
+            },
+            ".MathJax": {
+                "background-color": "#f5f5f5 !important",
+                padding: "2px 2px 2px 2px !important"
+            }
+        }
+    },
+    SVG: {
+        linebreaks: {
+            automatic: true
+        }
+    }
+});
+</script>
+    
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/%E4%BD%9C%E4%B8%9A/2020/12/16/Kmeans-patternrecognition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="骑着大鱼追月亮">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/assets/images/shuita.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="骑着大鱼追月亮学习笔记">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            K-means Python3实现
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-16T00:00:00+08:00">
+                2020-12-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/%E4%BD%9C%E4%B8%9A" itemprop="url" rel="index">
+                    <span itemprop="name">作业</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+                <div class="post-description">
+                    K-means Python3实现,adaboost,谱聚类思想,K-means混合高斯解释
+                </div>
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <!--> more注释 -->
+
+<h3 id="1-请简述-adaboost-算法的设计思想和主要计算步骤">1. 请简述 adaboost 算法的设计思想和主要计算步骤。</h3>
+
+<p>设计思想：</p>
+
+<p>1.给定训练集，寻找比较粗糙的分类规则（弱分类器），要比寻找精确的分类规则要简单得多。</p>
+
+<p>2.提升算法的核心，从弱学习算法出发，反复学习，得到一系列弱分类器，然后组合这些弱分类器，构成一个强分类器。</p>
+
+<p>3.基本做法：改变训练数据的概率(权重)分布，针对不同的训练数据的分布，调用弱学习算法来学习一系列分类器。</p>
+
+<p>其中有两个关键实现：</p>
+
+<p>1.在每轮训练中，如何改变训练数据的权值或者分布？Adaboost提高那些前一轮弱分类器分错的样本的权重，降低已经被正确分类的样本的权重。错分的样本将在下一轮弱分类器中得到更多的关注。于是分类问题被一系列弱分类器分而治之。</p>
+
+<p>2.如何将一系列的弱分类器组合成一个强分类器？采用加权(多数)表决的方法。具体地，加大分类错误率较小的弱分类器的权重，使其在表决中起到更大作用。</p>
+
+<p>主要计算步骤：</p>
+
+<p>输入训练数据集：$T={(x_1,y_1), (x_2,y_2), .., (x_n, y_n) }$</p>
+
+<p>输入弱学习算法：</p>
+
+<p>​	（1）初始化数据训练权重分布$D_1={w_{11},w_{12}, .. w_{1n}}$</p>
+
+<p>​	（2）分别对m=1,2,…,M进行操作，练M个弱训练器</p>
+
+<p>​			（2a）$G_m(x):-&gt;{-1, +1}$用权重分布$D_m$学习基本分类器</p>
+
+<p>​			（2b）计算$G_m(x)$上的分类错误率，加权$e_m=P(G_m(x)\neq y_i)=\sum_{i=1}^{n}w_{mi}I(G_m(x_i)\neq y_i)$</p>
+
+<p>​			（2c）计算$G_m(x)$贡献函数$\alpha_m=\frac{1}{2}ln\frac{1-e_m}{e_m}$</p>
+
+<p>​			（2d）更新$D_{m+1}$</p>
+
+<p>​	（3）构造基本线性组合$f(x)=\sum_{m=1}^M\alpha_mG_m(x)$，之后得到$G(x)=sign(f(x))$</p>
+
+<h3 id="2-请从混合高斯密度函数估计的角度简述k-means聚类算法的原理请主要用文字描述-条理清晰请给出-k-means-聚类算法的计算步骤请说明哪些因素会影响-k-means-算-法的聚类性能">2. 请从混合高斯密度函数估计的角度，简述K-Means聚类算法的原理(请主要用文字描述， 条理清晰)；请给出 K-Means 聚类算法的计算步骤；请说明哪些因素会影响 K-Means 算 法的聚类性能。</h3>
+
+<p>对于混合高斯密度函数估计引入如下假设：</p>
+
+<p>1.各类出现的先验概率均相等。</p>
+
+<p>2.每个样本点以概率为1属于一个类(后验概率0-1近似)；</p>
+
+<p>​计算数据点到类中心的欧氏距离的平方，即计算$||x_k-\hat\mu_i||$，寻找与样本$x_k$最近的类中心点，将$x_k$分给最近的类:</p>
+
+<p>​当$x_k距离\hat\mu_i最近时$$\hat P(\omega_i|x_k,\hat\theta) \approx1$，否则为0</p>
+
+<p>基于上述假设，对于c个高斯分布的均值，我们有：</p>
+
+<script type="math/tex; mode=display">\hat \mu_i=\frac{\sum_{k=1}^{n}P(\omega_i|x_k,\hat\mu)x_k}{\sum_{k=1}^nP(\omega_i|x_k,\hat\mu)} = \frac{1}{n}\sum_{x_k \in \omega_i}x_k \ \ \ i=1,2,...,c</script>
+
+<p>但是，样本$x_k$最终得到$c$个高斯分布的均值之后，以这些均值作为c个类中心，计算每个样本点到类中心的欧氏距离，将样本点归入到距离最近的类，从而完成K_均值聚类工作。</p>
+
+<p>影响Kmeans算法性能的有聚类簇数量多少，初始点位置，数据中的噪声点、孤立点数量，数据簇形状等。</p>
+
+<h3 id="3-请简述谱聚类算法的原理给出一种谱聚类算法经典算法shi-算法和-ng-算法之一-的计算步骤请指出哪些因素会影响聚类的性能">3. 请简述谱聚类算法的原理，给出一种谱聚类算法（经典算法、Shi 算法和 Ng 算法之一） 的计算步骤；请指出哪些因素会影响聚类的性能。</h3>
+
+<p>原理：</p>
+
+<p>从图切割的角度，聚类就是要找到一种合理的分割图的方法，分割后能形成若干个子图。链接不同子图的边的权重尽可能小，子图内部边的权重尽可能大。</p>
+
+<p>谱聚类算法建立在图论中的谱图理论基础上，其本质是将聚类问题转化为一个图上的关于顶点划分的最优问题。建立在点对亲和性基础上，理论上能对任意分布形状的样本空间进行聚类。</p>
+
+<p>构造拉普拉斯矩阵L，图的连通子图与L矩阵特征值的关系如下，设G为一个具有非负连接权重的无向图，由图G导出的L的零特征值的重数等于G的连通子图的个数，但实际上，数据簇之间可能相互混杂重叠，所以L通常不具有分块形状（无论怎么调整顺序）因此，可以考察其中较小的几个特征值(k个)对应的特征向量。</p>
+
+<p>核心过程：</p>
+
+<ul>
+  <li>利用点对之间的相似性，构造亲和度矩阵</li>
+  <li>构建拉普拉斯矩阵</li>
+  <li>求解拉普拉斯矩阵最小特征值对应的特征向量(通常会舍弃零特征所对应的分量全相等的特征向量)</li>
+  <li>有这些特征向量构成样本的新的特征，采用Kmeans等聚类方法完成最后的聚类。</li>
+</ul>
+
+<p>Ng算法：</p>
+
+<ol>
+  <li>输入，相似矩阵W，k个聚类簇</li>
+  <li>计算$L_{sym}=D^{-1/2}LD^{-1/2}$_</li>
+  <li>计算$L_{sym}$特征值最小的k个特征向量</li>
+  <li>让$U\in R^{n\times k}$包含所有这个k个特征向量。</li>
+  <li>从$U$构造矩阵$T\in R^{n\times k}$，normalizing每行到二范数为1，让$t_{ij}=\frac{u_{ij}}{\sqrt{\sum_{m=1}^nu_{im}^2}}$</li>
+  <li>让每行作为一个样本</li>
+  <li>对其进行Kmeans聚类得到$A_1,A_2,…,A_k$</li>
+  <li>输出$A_1,A_2,…,A_k$</li>
+</ol>
+
+<p>影响聚类性能的因素：</p>
+
+<ol>
+  <li>选择的k的数量，即选择特征向量的数量。</li>
+  <li>亲和度矩阵的构建方式</li>
+  <li>最后进行聚类所选择的方法。</li>
+</ol>
+
+<h2 id="第二部分计算机编程">第二部分：计算机编程</h2>
+
+<h3 id="1现有-1000-个二维空间的数据点可以采用如下-matlab-代码来生成">1．现有 1000 个二维空间的数据点，可以采用如下 MATLAB 代码来生成：</h3>
+
+<p>在运行完上述代码之后，可以获得 1000 个数据点，它们存储于矩阵X之中。X 是一个行数为 1000列数为2的矩阵。即是说，矩阵X 的每一行为一个数据点。另外，从上述 MATLAB 中可见，各真实分布的均值向量分别为 mu1, mu2, mu3, mu4, mu5。 提示：在实验中，生成一个数据矩阵X之后，就将其固定。后续实验均用此数据集，以便于分析算法。</p>
+
+<h3 id="1-编写一个程序实现经典的-k-均值聚类算法">(1). 编写一个程序，实现经典的 K-均值聚类算法；</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><table style="margin: 0px"><tbody><tr><td class="gutter"><pre>1<br/>2<br/>3<br/>4<br/>5<br/>6<br/>7<br/>8<br/>9<br/>10<br/>11<br/>12<br/>13<br/>14<br/>15<br/>16<br/>17<br/>18<br/>19<br/>20<br/>21<br/>22<br/>23<br/>24<br/>25<br/>26<br/>27<br/>28<br/>29<br/>30<br/>31<br/>32<br/>33<br/>34<br/>35<br/>36<br/>37<br/>38<br/>39<br/>40<br/>41<br/>42<br/>43<br/>44<br/>45<br/>46<br/>47<br/>48<br/>49<br/>50<br/>51<br/>52<br/>53<br/>54<br/>55</pre></td><td class="code"><pre class="highlight"><code><span class="k">def</span> <span class="nf">kmeans</span><span class="p">(</span><span class="n">cluster_n</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="s">"""
+    kmeans
+    :param cluster_n: 分类数量
+    :param X: 特征
+    :return:
+    """</span>
+    <span class="c"># 加载数据</span>
+    <span class="n">temp_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">max</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">temp_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="nb">min</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c"># 初始化</span>
+    <span class="n">cluster_center_point_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cluster_n</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">temp_min</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">temp_max</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">temp_min</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">temp_max</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">cluster_center_point_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
+    <span class="c"># 循环</span>
+    <span class="n">label_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">epoch</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+
+        <span class="n">epoch</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">norm2_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cluster_center_point_list</span><span class="p">[</span><span class="n">cluster_i</span><span class="p">]</span> <span class="o">-</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+                                   <span class="k">for</span> <span class="n">cluster_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cluster_n</span><span class="p">)])</span>
+            <span class="n">temp_cluster_id</span> <span class="o">=</span> <span class="n">norm2_list</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+            <span class="n">label_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_cluster_id</span>
+
+        <span class="n">new_cluster_center_point_sum_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cluster_n</span><span class="p">)]</span>
+        <span class="n">new_cluster_center_point_num_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cluster_n</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">label_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">label_array</span><span class="p">):</span>
+            <span class="n">new_cluster_center_point_sum_list</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_cluster_center_point_sum_list</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">+</span> <span class="n">X</span><span class="p">[</span>
+                <span class="n">data_id</span><span class="p">]</span>
+            <span class="n">new_cluster_center_point_num_list</span><span class="p">[</span><span class="n">label_id</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">new_cluster_center_point_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">cluster_center_id</span><span class="p">,</span> <span class="n">cluster_center_point</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_cluster_center_point_sum_list</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">new_cluster_center_point_num_list</span><span class="p">[</span><span class="n">cluster_center_id</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">cluster_center_point</span> <span class="o">=</span> <span class="n">cluster_center_point</span> <span class="o">/</span> <span class="n">new_cluster_center_point_num_list</span><span class="p">[</span><span class="n">cluster_center_id</span><span class="p">]</span>
+            <span class="n">new_cluster_center_point_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_center_point</span><span class="p">)</span>
+
+        <span class="n">cluster_point_equal</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">for</span> <span class="n">cluster_id</span><span class="p">,</span> <span class="n">new_cluster_center_point</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">new_cluster_center_point_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">new_cluster_center_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">cluster_center_point_list</span><span class="p">[</span><span class="n">cluster_id</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> \
+                    <span class="n">new_cluster_center_point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">cluster_center_point_list</span><span class="p">[</span><span class="n">cluster_id</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">cluster_point_equal</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="n">cluster_point_equal</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cluster_center_point_list</span> <span class="o">=</span> <span class="n">new_cluster_center_point_list</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"epoch:"</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">label_array</span><span class="p">,</span> <span class="n">cluster_center_point_list</span>
+</code></pre></td></tr></tbody></table></div></div>
+
+<h3 id="2令聚类个数等于-5采用不同的初始值报告聚类精度以及最后获得的聚类中心-并计算所获得的聚类中心与对应的真实分布的均值之间的误差">(2)令聚类个数等于 5，采用不同的初始值，报告聚类精度、以及最后获得的聚类中心， 并计算所获得的聚类中心与对应的真实分布的均值之间的误差。</h3>
+
+<p>较好的情况，随机初始值1：</p>
+
+<p>迭代次数epoch: 5
+准确率Homogeneity: 0.969
+聚类中心 [array([1.01415941, 3.96384996]), array([ 9.05324946, -0.04146593]), array([ 5.4918652 , -4.40789589]), array([6.12513501, 4.51401558]), array([ 1.12994159, -1.06260689])]
+聚类中心与真值均值之间的误差: 0.013</p>
+
+<p><img src="D:\Desktop\模式识别第五次作业\Kmeans_results_1.png" style="zoom:72%;" /></p>
+
+<p>较差的一个聚类情况，随机初始值2：</p>
+
+<p>epoch: 13
+Homogeneity: 0.767
+聚类中心 [array([ 5.32243428, -4.32696178]), array([9.06047487, 0.70167894]), array([5.80683471, 4.56049797]), array([ 9.00073177, -1.24803554]), array([0.94192585, 1.36741968])]
+聚类中心与真值均值之间的误差: 1.252</p>
+
+<p><img src="D:\Desktop\模式识别第五次作业\Kmeans_results_2.png" alt="f" style="zoom:72%;" /></p>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/%E8%81%9A%E7%B1%BB" rel="tag"># 聚类</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/git/2020/12/17/git-git/" rel="next" title="git学习">
+                <i class="fa fa-chevron-left"></i> git学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/%E6%B5%8B%E8%AF%95tutorial/tutorial/2020/12/15/markdowntest-test/" rel="prev" title="骑着大鱼追月亮学习记录测试">
+                骑着大鱼追月亮学习记录测试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/shuita.jpg"
+               alt="骑着大鱼追月亮" />
+          <p class="site-author-name" itemprop="name">骑着大鱼追月亮</p>
+           
+              <p class="site-description motion-element" itemprop="description">个人网站</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#第二部分计算机编程"> <span class="nav-number">1</span> <span class="nav-text">第二部分：计算机编程</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#1现有-1000-个二维空间的数据点可以采用如下-matlab-代码来生成"> <span class="nav-number">1.1</span> <span class="nav-text">1．现有 1000 个二维空间的数据点，可以采用如下 MATLAB 代码来生成：</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#1-编写一个程序实现经典的-k-均值聚类算法"> <span class="nav-number">1.2</span> <span class="nav-text">(1). 编写一个程序，实现经典的 K-均值聚类算法；</span> </a> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#2令聚类个数等于-5采用不同的初始值报告聚类精度以及最后获得的聚类中心-并计算所获得的聚类中心与对应的真实分布的均值之间的误差"> <span class="nav-number">1.3</span> <span class="nav-text">(2)令聚类个数等于 5，采用不同的初始值，报告聚类精度、以及最后获得的聚类中心， 并计算所获得的聚类中心与对应的真实分布的均值之间的误差。</span> </a> </li> </ol> </li>
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">骑着大鱼追月亮</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://jekyllrb.com">Jekyll</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
