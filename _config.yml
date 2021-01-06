@@ -234,7 +234,7 @@ social_icons:
 
 # Sidebar Avatar
 # in directory: /assets/images/avatar.gif
-#avatar: /assets/images/shuita.jpg
+avatar: /assets/images/shuita.jpg
 
 
 # Table Of Contents in the Sidebar
@@ -346,7 +346,7 @@ post_copyright:
 #   enabled: [true/false] - Replace with specific image
 #   image: url-of-image   - Images's url
 custom_logo:
-  enabled: true
+  enabled: false
   image: /assets/images/shuita.jpg
 
 
